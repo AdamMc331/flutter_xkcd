@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_xkcd/data/api.dart';
+import 'package:flutter_xkcd/models/comic.dart';
+import 'package:flutter_xkcd/widgets/comic.dart' as comicWidget;
 
 void main() => runApp(MyApp());
 
@@ -26,35 +29,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Woodpecker - #614',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                'If you don\'t have an extension cord I can get that too.  Because we\'re friends!  Right?',
-              ),
-            ),
-            Expanded(
-              child: Image.network('https://imgs.xkcd.com/comics/woodpecker.png'),
-            ),
-          ],
+      body: SafeArea(
+        child: FutureBuilder<Comic>(
+          future: XKCDApi().fetchLatestComic(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return comicWidget.Comic(comic: snapshot.data);
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            } else {
+              return CircularProgressIndicator();
+            }
+          },
         ),
       ),
     );
