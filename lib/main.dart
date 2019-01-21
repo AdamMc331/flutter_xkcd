@@ -35,21 +35,17 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SafeArea(
-        child: PageView(
+        child: PageView.builder(
           controller: PageController(
             initialPage: 0,
           ),
-          children: <Widget>[
-            ComicPage(api: XKCDApi()),
-            ComicPage(
+          itemBuilder: (context, index) {
+            return ComicPage(
               api: XKCDApi(),
-              comicNumber: 2099,
-            ),
-            ComicPage(
-              api: XKCDApi(),
-              comicNumber: 2098,
-            ),
-          ],
+              comicNumber: 2100 - index,
+            );
+          },
+          itemCount: 2100,
         ),
       ),
     );
