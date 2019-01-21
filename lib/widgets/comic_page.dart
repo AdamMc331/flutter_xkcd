@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_xkcd/data/api.dart';
+import 'package:flutter_xkcd/data/repository.dart';
 import 'package:flutter_xkcd/models/comic.dart';
 import 'package:flutter_xkcd/widgets/comic.dart' as comicWidget;
 
 class ComicPage extends StatelessWidget {
-  final XKCDApi api;
+  final XKCDRepository repository;
   final int comicNumber;
 
   ComicPage({
-    this.api,
+    this.repository,
     this.comicNumber,
   });
 
   Future<Comic> _getFuture() {
     return comicNumber == null
-        ? api.fetchLatestComic()
-        : api.fetchComic(comicNumber);
+        ? repository.fetchLatestComic()
+        : repository.fetchComic(comicNumber);
   }
 
   @override

@@ -40,4 +40,20 @@ class Comic {
       day: json['day'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "month": month,
+      "num": number,
+      "link": link,
+      "year": year,
+      "news": news,
+      "safe_title": safeTitle,
+      "transcript": transcript,
+      "alt": altText,
+      "img": image,
+      "title": title,
+      "day": day,
+    };
+  }
 }

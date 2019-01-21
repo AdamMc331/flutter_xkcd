@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_xkcd/data/api.dart';
+import 'package:flutter_xkcd/data/database.dart';
+import 'package:flutter_xkcd/data/repository.dart';
 import 'package:flutter_xkcd/models/comic.dart';
 import 'package:flutter_xkcd/widgets/comic_page.dart';
 
@@ -29,6 +31,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  XKCDRepository _getRepository() {
+    return XKCDRepository(
+      api: XKCDApi(),
+      database: XKCDDatabase.db,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: SafeArea(
         child: FutureBuilder<Comic>(
-          future: XKCDApi().fetchLatestComic(),
+          future: _getRepository().fetchLatestComic(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return PageView.builder(
@@ -46,14 +55,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 itemBuilder: (context, index) {
                   return ComicPage(
-                    api: XKCDApi(),
+                    repository: _getRepository(),
                     comicNumber: snapshot.data.number - index,
                   );
                 },
                 itemCount: snapshot.data.number,
               );
             } else if (snapshot.hasError) {
-              return Center(child: Text('Unable to load comics.'));
+              return Center(child: Text('${snapshot.error}'));
             } else {
               return Center(child: CircularProgressIndicator());
             }
