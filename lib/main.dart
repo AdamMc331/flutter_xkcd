@@ -47,6 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
   /// The number of comics based on our call to get the latest.
   int _comicCount = 0;
 
+  bool _isSearching = false;
+
   void _onRandomPressed() {
     _pageController.jumpToPage(Random().nextInt(_comicCount));
   }
@@ -60,23 +62,64 @@ class _MyHomePageState extends State<MyHomePage> {
     if (item == _jumpToLatest) {
       _pageController.jumpToPage(0);
     } else if (item == _search) {
-      //TODO:
+      setState(() {
+        _isSearching = true;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: <Widget>[
-          _buildRandomAction(),
-          _buildPopupMenu(),
-        ],
-      ),
+      appBar: _isSearching ? _buildSearchingAppBar() : _buildDefaultAppBar(),
       body: SafeArea(
         child: _buildComicPager(),
       ),
+    );
+  }
+
+  /// Builds the app bar to use when we're not actively searching.
+  Widget _buildDefaultAppBar() {
+    return AppBar(
+      title: Text(widget.title),
+      actions: <Widget>[
+        _buildRandomAction(),
+        _buildPopupMenu(),
+      ],
+    );
+  }
+
+  /// Builds the appbar that should appear when we are searching.
+  Widget _buildSearchingAppBar() {
+    return AppBar(
+      title: TextField(
+        style: TextStyle(
+          color: Colors.white,
+        ),
+        decoration: new InputDecoration(
+          prefixIcon: new Icon(Icons.search, color: Colors.white),
+          hintText: "Search...",
+          hintStyle: new TextStyle(color: Colors.white),
+        ),
+        keyboardType: TextInputType.number,
+        autofocus: true,
+        onSubmitted: (input) {
+          setState(() {
+            _isSearching = false;
+            _loadComic(input);
+          });
+        },
+      ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.close),
+          onPressed: () {
+            setState(() {
+              _isSearching = false;
+            });
+          },
+        )
+      ],
     );
   }
 
@@ -134,5 +177,11 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       },
     );
+  }
+
+  void _loadComic(String input) {
+    final comicNumber = int.parse(input);
+    final page = _comicCount - comicNumber;
+    _pageController.jumpToPage(page);
   }
 }
