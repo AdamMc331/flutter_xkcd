@@ -45,30 +45,36 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SafeArea(
-        child: FutureBuilder<Comic>(
-          future: _getRepository().fetchLatestComic(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return PageView.builder(
-                controller: PageController(
-                  initialPage: 0,
-                ),
-                itemBuilder: (context, index) {
-                  return ComicPage(
-                    repository: _getRepository(),
-                    comicNumber: snapshot.data.number - index,
-                  );
-                },
-                itemCount: snapshot.data.number,
-              );
-            } else if (snapshot.hasError) {
-              return Center(child: Text('${snapshot.error}'));
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          },
-        ),
+        child: _buildComicPager(),
       ),
     );
+  }
+
+  /// Builds a page view that first fetches the latest comic to get the
+  /// comic number, and then paginates through them.
+  Widget _buildComicPager() {
+    return FutureBuilder<Comic>(
+        future: _getRepository().fetchLatestComic(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return PageView.builder(
+              controller: PageController(
+                initialPage: 0,
+              ),
+              itemBuilder: (context, index) {
+                return ComicPage(
+                  repository: _getRepository(),
+                  comicNumber: snapshot.data.number - index,
+                );
+              },
+              itemCount: snapshot.data.number,
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text('${snapshot.error}'));
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      );
   }
 }

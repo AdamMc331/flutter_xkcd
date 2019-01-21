@@ -1,3 +1,4 @@
+/// Model class for an XKCD comic.
 class Comic {
   final String month;
   final int number;

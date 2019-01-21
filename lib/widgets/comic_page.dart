@@ -3,6 +3,8 @@ import 'package:flutter_xkcd/data/repository.dart';
 import 'package:flutter_xkcd/models/comic.dart';
 import 'package:flutter_xkcd/widgets/comic.dart' as comicWidget;
 
+/// A page that displays a comic, and is also responsible for fetching that
+/// comic from our [repository].
 class ComicPage extends StatelessWidget {
   final XKCDRepository repository;
   final int comicNumber;

@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
+/// Class responsible for managing the local storage of comics.
 class XKCDDatabase {
   XKCDDatabase._();
 
@@ -41,6 +42,8 @@ class XKCDDatabase {
     });
   }
 
+  /// Inserts a new comic to the database, replacing the previous one if there
+  /// is a conflict.
   newComic(Comic newComic) async {
     final db = await database;
     var res = await db.insert(
@@ -51,6 +54,7 @@ class XKCDDatabase {
     return res;
   }
 
+  /// Retrieves a comic with a specific [number].
   getComic(int number) async {
     final db = await database;
     var res = await db.query("comic", where: "num = ?", whereArgs: [number]);

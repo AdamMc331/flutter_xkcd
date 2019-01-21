@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_xkcd/models/comic.dart' as model;
 
+/// Widget that displays a particular comic.
 class Comic extends StatelessWidget {
   final model.Comic comic;
 
