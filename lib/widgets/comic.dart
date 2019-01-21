@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_xkcd/models/comic.dart' as model;
+import 'package:flutter_xkcd/widgets/zoomable_image_page.dart';
 
 /// Widget that displays a particular comic.
-class Comic extends StatelessWidget {
+class Comic extends StatefulWidget {
   final model.Comic comic;
 
   Comic({
     this.comic,
   });
 
+  @override
+  _ComicState createState() => _ComicState();
+}
+
+class _ComicState extends State<Comic> {
   String _getTitle() {
-    return '${comic.title} - #${comic.number}';
+    return '${widget.comic.title} - #${widget.comic.number}';
+  }
+
+  void _imageTapped() {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ZoomableImagePage(imageUrl: widget.comic.image)));
   }
 
   @override
@@ -28,9 +39,12 @@ class Comic extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Image.network(comic.image),
+            child: GestureDetector(
+              child: Image.network(widget.comic.image),
+              onTap: _imageTapped,
+            ),
           ),
-          Text(comic.altText),
+          Text(widget.comic.altText),
         ],
       ),
     );
