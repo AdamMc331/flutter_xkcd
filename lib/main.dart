@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_xkcd/data/api.dart';
+import 'package:flutter_xkcd/models/comic.dart';
 import 'package:flutter_xkcd/widgets/comic_page.dart';
 
 void main() => runApp(MyApp());
@@ -35,17 +36,28 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SafeArea(
-        child: PageView.builder(
-          controller: PageController(
-            initialPage: 0,
-          ),
-          itemBuilder: (context, index) {
-            return ComicPage(
-              api: XKCDApi(),
-              comicNumber: 2100 - index,
-            );
+        child: FutureBuilder<Comic>(
+          future: XKCDApi().fetchLatestComic(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return PageView.builder(
+                controller: PageController(
+                  initialPage: 0,
+                ),
+                itemBuilder: (context, index) {
+                  return ComicPage(
+                    api: XKCDApi(),
+                    comicNumber: snapshot.data.number - index,
+                  );
+                },
+                itemCount: snapshot.data.number,
+              );
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Unable to load comics.'));
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
           },
-          itemCount: 2100,
         ),
       ),
     );
