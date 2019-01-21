@@ -13,7 +13,9 @@ class ComicPage extends StatelessWidget {
   });
 
   Future<Comic> _getFuture() {
-    return comicNumber == null ? api.fetchLatestComic() : api.fetchComic(comicNumber);
+    return comicNumber == null
+        ? api.fetchLatestComic()
+        : api.fetchComic(comicNumber);
   }
 
   @override
@@ -26,7 +28,9 @@ class ComicPage extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         } else {
-          return CircularProgressIndicator();
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
       },
     );

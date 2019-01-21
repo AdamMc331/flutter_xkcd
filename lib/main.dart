@@ -35,7 +35,22 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SafeArea(
-        child: ComicPage(api: XKCDApi()),
+        child: PageView(
+          controller: PageController(
+            initialPage: 0,
+          ),
+          children: <Widget>[
+            ComicPage(api: XKCDApi()),
+            ComicPage(
+              api: XKCDApi(),
+              comicNumber: 2099,
+            ),
+            ComicPage(
+              api: XKCDApi(),
+              comicNumber: 2098,
+            ),
+          ],
+        ),
       ),
     );
   }
