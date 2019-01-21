@@ -13,4 +13,14 @@ class XKCDApi {
       throw Exception('Failed to load latest comic.');
     }
   }
+
+  Future<Comic> fetchComic(int comicNumber) async {
+    final response = await http.get('https://xkcd.com/$comicNumber/info.0.json');
+
+    if (response.statusCode == 200) {
+      return Comic.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load comic $comicNumber.');
+    }
+  }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_xkcd/data/api.dart';
-import 'package:flutter_xkcd/models/comic.dart';
-import 'package:flutter_xkcd/widgets/comic.dart' as comicWidget;
+import 'package:flutter_xkcd/widgets/comic_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -36,18 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SafeArea(
-        child: FutureBuilder<Comic>(
-          future: XKCDApi().fetchLatestComic(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return comicWidget.Comic(comic: snapshot.data);
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            } else {
-              return CircularProgressIndicator();
-            }
-          },
-        ),
+        child: ComicPage(api: XKCDApi()),
       ),
     );
   }
