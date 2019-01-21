@@ -38,14 +38,30 @@ class _MyHomePageState extends State<MyHomePage> {
     database: XKCDDatabase.db,
   );
 
+  /// We want the page controller to be defined at the class level so we can
+  /// tell it to move to a certain page.
   final _pageController = PageController(
     initialPage: 0,
   );
 
-  int _itemCount = 0;
+  /// The number of comics based on our call to get the latest.
+  int _comicCount = 0;
 
   void _onRandomPressed() {
-    _pageController.jumpToPage(Random().nextInt(_itemCount));
+    _pageController.jumpToPage(Random().nextInt(_comicCount));
+  }
+
+  static final String _jumpToLatest = "Jump To Latest";
+  static final String _search = "Search";
+
+  static final _choices = [_jumpToLatest, _search];
+
+  void _onActionItemSelected(String item) {
+    if (item == _jumpToLatest) {
+      _pageController.jumpToPage(0);
+    } else if (item == _search) {
+      //TODO:
+    }
   }
 
   @override
@@ -54,19 +70,40 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: <Widget>[
-          GestureDetector(
-            onTap: _onRandomPressed,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text('RANDOM'),
-              ),
-            ),
-          ),
+          _buildRandomAction(),
+          _buildPopupMenu(),
         ],
       ),
       body: SafeArea(
         child: _buildComicPager(),
+      ),
+    );
+  }
+
+  /// Builds the popup menu of overflow choices.
+  Widget _buildPopupMenu() {
+    return PopupMenuButton<String>(
+      onSelected: _onActionItemSelected,
+      itemBuilder: (BuildContext context) {
+        return _choices.map((String item) {
+          return PopupMenuItem<String>(
+            value: item,
+            child: Text(item),
+          );
+        }).toList();
+      },
+    );
+  }
+
+  /// Builds the action widget for the random icon.
+  Widget _buildRandomAction() {
+    return GestureDetector(
+      onTap: _onRandomPressed,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text('RANDOM'),
+        ),
       ),
     );
   }
@@ -78,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
       future: _repository.fetchLatestComic(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          _itemCount = snapshot.data.number;
+          _comicCount = snapshot.data.number;
 
           return PageView.builder(
             controller: _pageController,
