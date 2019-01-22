@@ -44,6 +44,8 @@ class _MyHomePageState extends State<MyHomePage> {
     initialPage: 0,
   );
 
+  final _searchController = TextEditingController();
+
   /// The number of comics based on our call to get the latest.
   int _comicCount = 0;
 
@@ -102,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
           hintStyle: new TextStyle(color: Colors.white),
         ),
         keyboardType: TextInputType.number,
+        controller: _searchController,
         autofocus: true,
         onSubmitted: (input) {
           setState(() {
@@ -116,6 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: () {
             setState(() {
               _isSearching = false;
+              _loadComic(_searchController.text);
             });
           },
         )
