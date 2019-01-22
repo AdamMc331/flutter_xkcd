@@ -57,4 +57,23 @@ class Comic {
       "day": day,
     };
   }
+
+  @override
+  bool operator ==(other) {
+    return other is Comic
+        && this.month == other.month
+        && this.number == other.number
+        && this.link == other.link
+        && this.year == other.year
+        && this.news == other.news
+        && this.safeTitle == other.safeTitle
+        && this.transcript == other.transcript
+        && this.altText == other.altText
+        && this.image == other.image
+        && this.title == other.title
+        && this.day == other.day;
+  }
+
+  @override
+  int get hashCode => super.hashCode;
 }
